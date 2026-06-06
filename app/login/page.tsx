@@ -31,17 +31,17 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-lg overflow-hidden">
+    <main className="min-h-screen bg-gradient-to-b from-rose-50 to-white flex items-center justify-center p-6">
+        <div className="bg-white w-full max-w-lg rounded-3xl shadow-lg overflow-hidden">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-rose-100 to-orange-50 px-8 pt-10 pb-8">
+        <div className="bg-gradient-to-r from-rose-100 to-orange-50 px-10 pt-10 pb-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-1">Welcome Back</h1>
           <p className="text-sm text-gray-500">Sign in to manage your account</p>
         </div>
 
         {/* Form */}
-        <div className="px-8 py-8">
+        <div className="px-10 py-8">
           <form onSubmit={handleCredentials} className="space-y-5">
 
             {/* Email */}
