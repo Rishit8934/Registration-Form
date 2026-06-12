@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { sendWelcomeEmail } from '@/lib/mailer'
 
 export async function registerUser(formData: FormData) {
   const name        = formData.get('name') as string
@@ -32,6 +33,8 @@ export async function registerUser(formData: FormData) {
       address,
     },
   })
+
+  await sendWelcomeEmail(name, email)
 
   return { success: 'Registration successful!' }
 }

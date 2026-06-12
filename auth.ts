@@ -4,6 +4,7 @@ import GitHub from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
+import { sendWelcomeEmail } from '@/lib/mailer'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -39,6 +40,46 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async signIn({ user, account }) {
+      console.log('Sign in callback fired:', account?.provider, user?.email)
+
+      if (account?.provider === 'google' || account?.provider === 'github') {
+        try {
+          const email = user.email!
+          const name  = user.name!
+
+          console.log('Checking if user exists:', email)
+
+          const existing = await prisma.user.findUnique({
+            where: { email },
+          })
+
+          console.log('User exists:', !!existing)
+
+          if (!existing) {
+            await prisma.user.create({
+              data: {
+                name,
+                email,
+                password:    '',
+                phone:       '',
+                dateOfBirth: new Date(),
+                address:     '',
+              },
+            })
+            await sendWelcomeEmail(name, email)
+            console.log('Email sent to:', email)
+          } else {
+            console.log('User already exists, skipping email')
+          }
+        } catch (error) {
+          console.error('Error:', error)
+        }
+      }
+      return true
+    },
+  },
   pages: {
     signIn: '/login',
   },
