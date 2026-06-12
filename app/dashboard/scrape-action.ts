@@ -6,7 +6,9 @@ import { openai } from '@/lib/openai'
 interface ScrapedLink {
   url: string
   text: string
-}
+} 
+
+
 
 export async function scrapeWebsite(inputUrl: string) {
   try {
@@ -16,11 +18,13 @@ export async function scrapeWebsite(inputUrl: string) {
       url = 'https://' + url
     }
 
+
     // 1. Fetch the website HTML
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; ChristmasBot/1.0)',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       },
+      signal: AbortSignal.timeout(10000), // 10 second timeout
     })
 
     if (!response.ok) {
@@ -60,6 +64,7 @@ export async function scrapeWebsite(inputUrl: string) {
       }
     })
 
+
     // Limit to first 50 links to keep things fast
     const limitedLinks = links.slice(0, 50)
 
@@ -68,22 +73,28 @@ export async function scrapeWebsite(inputUrl: string) {
       .map((l) => `- ${l.text}: ${l.url}`)
       .join('\n')
 
-    const aiResponse = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You analyze website link structures and provide a short, helpful summary of what the website offers and how its pages are organized.',
-        },
-        {
-          role: 'user',
-          content: `Website: ${url}\nTitle: ${pageTitle}\n\nLinks found:\n${linksListText}\n\nGive a short summary (3-4 sentences) of what this website is about and how it's structured.`,
-        },
-      ],
-    })
+    let summary = '⚠️ AI summary unavailable — OpenAI quota exceeded. Add billing at platform.openai.com to enable AI summaries.'
 
-    const summary = aiResponse.choices[0]?.message?.content || ''
+    try {
+      const aiResponse = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content:
+              'You analyze website link structures and provide a short, helpful summary of what the website offers and how its pages are organized.',
+          },
+          {
+            role: 'user',
+            content: `Website: ${url}\nTitle: ${pageTitle}\n\nLinks found:\n${linksListText}\n\nGive a short summary (3-4 sentences) of what this website is about and how it's structured.`,
+          },
+        ],
+      })
+
+      summary = aiResponse.choices[0]?.message?.content || summary
+    } catch (err) {
+      console.error('OpenAI error (continuing without AI summary):', err)
+    }
 
     return {
       success: true,

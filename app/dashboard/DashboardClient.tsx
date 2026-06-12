@@ -99,13 +99,13 @@ export default function DashboardClient({ userName }: { userName: string }) {
               </h3>
               <div className="space-y-2 max-h-96 overflow-y-auto">
                 {result.links?.map((link, i) => (
-                  
-                    key={i}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block border border-gray-100 rounded-lg px-4 py-2.5 hover:bg-gray-50 transition-colors"
-                  >
+  
+                        <a key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block border border-gray-100 rounded-lg px-4 py-2.5 hover:bg-gray-50 transition-colors"
+                        >
                     <p className="text-sm text-gray-700 font-medium truncate">{link.text}</p>
                     <p className="text-xs text-gray-400 truncate">{link.url}</p>
                   </a>
