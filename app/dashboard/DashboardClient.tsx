@@ -42,24 +42,26 @@ export default function DashboardClient({ userName }: { userName: string }) {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 sm:p-8">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-800">Welcome, {userName} 👋</h1>
-            <p className="text-sm text-gray-400">Enter a website URL to analyze its pages</p>
-          </div>
-          <button
-            onClick={() => signOut({ callbackUrl: '/login' })}
-            className="text-sm text-gray-500 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-            Sign out
-          </button>
-        </div>
+        {/* Header */}
+<div className="flex items-center justify-between mb-8 bg-white/70 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-sm border border-white/50">
+  <div>
+    <h1 className="text-2xl font-semibold text-gray-800">Welcome, {userName} 👋</h1>
+    <p className="text-sm text-gray-500">Enter a website URL to analyze its pages</p>
+  </div>
+  <button
+    onClick={() => signOut({ callbackUrl: '/login' })}
+    className="text-sm text-gray-600 bg-white border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors shadow-sm">
+    Sign out
+  </button>
+</div>
 
         {/* Form */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+        {/* Form */}
+<div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-md border border-white/50 p-6 mb-6">    
           <form onSubmit={handleSubmit} className="flex gap-3">
             <input
               type="text"
@@ -72,7 +74,7 @@ export default function DashboardClient({ userName }: { userName: string }) {
             <button
               type="submit"
               disabled={loading}
-              className="bg-gray-800 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50">
+              className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors disabled:opacity-50 shadow-sm"
               {loading ? 'Analyzing...' : 'Analyze'}
             </button>
           </form>
